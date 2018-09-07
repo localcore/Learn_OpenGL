@@ -18,7 +18,7 @@ const char* vertexShaderSource = "#version 330 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
                                  "void main()\n"
                                  "{\n"
-                                 "   gl_Position = vec4(aPos, 0.0);\n"
+                                 "   gl_Position = vec4(aPos, 1.0);\n"
                                  "}\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"
@@ -148,7 +148,7 @@ int main () {
 
 		// update shader uniform
 		float timeValue = glfwGetTime();
-		float greenValue = sin(timeValue) / 2.0f + 0.5f;
+		float greenValue = sin(timeValue * 6.28) / 2.0f + 0.5f;
 		int vertexColorLocation = glGetUniformLocation(shaderProgram,
 		                                               "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
