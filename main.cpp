@@ -135,6 +135,11 @@ int main (int argc, char* argv[]) {
 	unsigned int shader = createShader(source.vertexSource, source.fragmentSource);
 	glUseProgram(shader);
 
+	int location = glGetUniformLocation(shader, "u_Color");
+
+	float r = 1.0f;
+	float increment = 0.05f;
+
 	while (!glfwWindowShouldClose(window)) {
 
 		processInput(window);
@@ -144,6 +149,18 @@ int main (int argc, char* argv[]) {
 
 		//glColor3f(1, 0, 0);
 		//glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(float) / 2);
+
+		r += increment;
+		if (r >= 1 or r <= 0) {
+			if (increment > 0) {
+				r = 1;
+			} else {
+				r = 0;
+			};
+			increment = -increment;
+		}
+
+		glUniform4f(location, r, 0.0f, 0.0f, 1.0f);
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(window);
@@ -171,6 +188,7 @@ GLFWwindow* createWindow () {
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
