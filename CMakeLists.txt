@@ -14,9 +14,9 @@ include_directories(GLFW/deps)
 #include_directories(${GLFW_SOURCE_DIR}/deps)
 
 set(GLAD "${GLFW_SOURCE_DIR}/deps/glad/glad.h"
-        "${GLFW_SOURCE_DIR}/deps/glad.c" Renderer.h Renderer.cpp VertexBuffer.cpp VertexArray.cpp VertexBufferLayout.cpp VertexBufferLayout.h)
+        "${GLFW_SOURCE_DIR}/deps/glad.c" Renderer.h Renderer.cpp VertexBuffer.cpp VertexArray.cpp VertexBufferLayout.cpp VertexBufferLayout.h Shader.h Shader.cpp)
 
-add_executable(Learn_OpenGL main.cpp Renderer.cpp VertexBuffer.cpp IndexBuffer.cpp VertexArray.cpp VertexBufferLayout.cpp ${GLAD})
+add_executable(Learn_OpenGL main.cpp Renderer.cpp VertexBuffer.cpp IndexBuffer.cpp VertexArray.cpp VertexBufferLayout.cpp Shader.cpp ${GLAD})
 
 #target_link_libraries(Learn_OpenGL_GLFW glfw ${GLFW_LIBRARIES})
 #target_link_libraries(Learn_OpenGL_GLFW glfw ${OPENGL_glu_LIBRARY} ${GLFW_LIBRARIES})
