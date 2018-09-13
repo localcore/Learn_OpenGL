@@ -6,6 +6,10 @@
 #include <fstream>
 #include <sstream>
 
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+
 struct ShaderProgramSource {
 	std::string vertexSource;
 	std::string fragmentSource;
@@ -102,40 +106,39 @@ int main (int argc, char* argv[]) {
 			0.5f, -0.5f,
 	};*/
 
-	float vertices[] = {
+	float positions[] = {
 			-0.5f, -0.5f,
 			0.5f, -0.5f,
 			0.5f, 0.5f,
 			-0.5f, 0.5f,
-			0.0f, -0.8f,
 	};
 
 	unsigned int indices[] = {
 			0, 1, 2,
 			2, 3, 0,
-			0, 4, 1,
 	};
 
-	unsigned int buffer;
-	glGenBuffers(1, &buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	unsigned int vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	VertexBuffer vb(positions, sizeof(positions));
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr);
 
-	unsigned int ibo;
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	IndexBuffer ib(indices, 6);
 
 	ShaderProgramSource source = parseShader("res/shaders/triangle.glsl");
-
-
 	unsigned int shader = createShader(source.vertexSource, source.fragmentSource);
 	glUseProgram(shader);
 
 	int location = glGetUniformLocation(shader, "u_Color");
+
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	float r = 1.0f;
 	float increment = 0.05f;
@@ -144,11 +147,15 @@ int main (int argc, char* argv[]) {
 
 		processInput(window);
 
-		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//glColor3f(1, 0, 0);
-		//glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(float) / 2);
+		glUseProgram(shader);
+		glUniform4f(location, r, 0.0f, 0.0f, 1.0f);
+
+		glBindVertexArray(vao);
+		ib.bind();
+
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
 
 		r += increment;
 		if (r >= 1 or r <= 0) {
@@ -159,9 +166,6 @@ int main (int argc, char* argv[]) {
 			};
 			increment = -increment;
 		}
-
-		glUniform4f(location, r, 0.0f, 0.0f, 1.0f);
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -179,6 +183,10 @@ GLFWwindow* createWindow () {
 	if (!glfwInit()) {
 		return nullptr;
 	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Learn OpenGL", nullptr, nullptr);
 
