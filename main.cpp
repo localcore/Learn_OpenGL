@@ -14,17 +14,16 @@ int main (int argc, char* argv[]) {
 	GLFWwindow* window = createWindow();
 
 	float positions[] = {
-			-0.5f, -0.5f,
-			0.5f, -0.5f,
-			0.5f, 0.5f,
-			-0.5f, 0.5f,
+			-0.5f, -0.5f, 0.0f, 0.0f,
+			0.5f, -0.5f, 1.0f, 0.0f,
+			0.5f, 0.5f, 1.0f, 1.0f,
+			-0.5f, 0.5f, 0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
 			0, 1, 2,
 			2, 3, 0,
 	};
-
 
 	{
 
@@ -33,12 +32,17 @@ int main (int argc, char* argv[]) {
 
 		VertexBufferLayout layout;
 		layout.pushFloat(2);
+		layout.pushFloat(2);
 		va.addBuffer(vb, layout);
 
 		IndexBuffer ib(indices, 6);
 
 		Shader shader("res/shaders/triangle.glsl");
 		shader.bind();
+
+		Texture texture("res/textures/prova.png");
+		texture.bind(0);
+		shader.setUniform1i("u_Texture", 0);
 
 		va.unbind();
 		vb.unbind();
@@ -56,12 +60,12 @@ int main (int argc, char* argv[]) {
 			renderer.clear();
 
 			shader.bind();
-			shader.setUniform4f("u_Color", r, 0.0f, 0.0f, 1.0f);
+			//shader.setUniform4f("u_Color", r, 0.0f, 0.0f, 1.0f);
 			renderer.draw(va, ib, shader);
 
 			if (r > 1 or r < 0)
 				increment = -increment;
-			r+= increment;
+			r += increment;
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

@@ -22,6 +22,8 @@ public:
 
 	void unbind () const;
 
+	void setUniform1i (const std::string&, int);
+
 	void setUniform1f (const std::string&, float);
 
 	void setUniform4f (const std::string&, float, float, float, float);
