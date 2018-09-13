@@ -1,42 +1,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <iostream>
-
 #include "Renderer.h"
-//#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "Shader.h"
-
-void processInput (GLFWwindow* window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-}
-
-void framebuffer_size_callback (GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-}
 
 GLFWwindow* createWindow ();
+
+void framebuffer_size_callback (GLFWwindow*, int, int);
+
+void processInput (GLFWwindow*);
 
 int main (int argc, char* argv[]) {
 
 	GLFWwindow* window = createWindow();
-
-	/*float vertices[] = {
-			-0.5f, -0.5f,
-			0.5f, -0.5f,
-			0.5f, 0.5f,
-
-			0.5f, 0.5f,
-			-0.5f, 0.5f,
-			-0.5f, -0.5f,
-
-			-0.5f, -0.5f,
-			0.0f, -0.8f,
-			0.5f, -0.5f,
-	};*/
 
 	float positions[] = {
 			-0.5f, -0.5f,
@@ -50,61 +25,53 @@ int main (int argc, char* argv[]) {
 			2, 3, 0,
 	};
 
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
 
-	VertexBufferLayout layout;
-	layout.pushFloat(2);
-	va.addBuffer(vb, layout);
+	{
 
-	IndexBuffer ib(indices, 6);
+		VertexArray va;
+		VertexBuffer vb(positions, sizeof(positions));
 
-	Shader shader("res/shaders/triangle.glsl");
-	shader.bind();
+		VertexBufferLayout layout;
+		layout.pushFloat(2);
+		va.addBuffer(vb, layout);
 
+		IndexBuffer ib(indices, 6);
 
-	va.unbind();
-	vb.unbind();
-	ib.unbind();
-	shader.unbind();
-
-	float r = 1.0f;
-	float increment = 0.05f;
-
-	while (!glfwWindowShouldClose(window)) {
-
-		processInput(window);
-
-		glClear(GL_COLOR_BUFFER_BIT);
-
+		Shader shader("res/shaders/triangle.glsl");
 		shader.bind();
-		shader.setUniform4f("u_Color", r, 0.0f, 0.0f, 1.0f);
 
-		va.bind();
-		ib.bind();
+		va.unbind();
+		vb.unbind();
+		ib.unbind();
+		shader.unbind();
 
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
+		Renderer renderer;
 
-		r += increment;
-		if (r >= 1 or r <= 0) {
-			if (increment > 0) {
-				r = 1;
-			} else {
-				r = 0;
-			};
-			increment = -increment;
+		float r = 0.0f;
+		float increment = 0.05f;
+
+		while (!glfwWindowShouldClose(window)) {
+
+			processInput(window);
+			renderer.clear();
+
+			shader.bind();
+			shader.setUniform4f("u_Color", r, 0.0f, 0.0f, 1.0f);
+			renderer.draw(va, ib, shader);
+
+			if (r > 1 or r < 0)
+				increment = -increment;
+			r+= increment;
+
+			glfwSwapBuffers(window);
+			glfwPollEvents();
 		}
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
-
-	shader.~Shader();
 
 	glfwTerminate();
 	return 0;
 }
-
 
 GLFWwindow* createWindow () {
 
@@ -132,4 +99,13 @@ GLFWwindow* createWindow () {
 		return nullptr;
 	}
 	return window;
+}
+
+void framebuffer_size_callback (GLFWwindow* window, int width, int height) {
+	glViewport(0, 0, width, height);
+}
+
+void processInput (GLFWwindow* window) {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
 }

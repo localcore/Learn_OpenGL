@@ -1,3 +1,5 @@
+#pragma once
+
 class IndexBuffer {
 private:
 	unsigned int m_RendererID;
@@ -11,5 +13,5 @@ public:
 
 	void unbind () const;
 
-	inline unsigned int GetCount () const { return m_Count; }
+	inline unsigned int getCount () const { return m_Count; }
 };
