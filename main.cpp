@@ -134,7 +134,7 @@ int main (int argc, char* argv[]) {
 
 	int location = glGetUniformLocation(shader, "u_Color");
 
-	glBindVertexArray(0);
+	va.unbind();
 	glUseProgram(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
