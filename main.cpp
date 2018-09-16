@@ -2,6 +2,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Renderer.h"
+#include "vendor/glm/glm.hpp"
+#include "vendor/glm/gtc/matrix_transform.hpp"
 
 GLFWwindow* createWindow ();
 
@@ -27,6 +29,9 @@ int main (int argc, char* argv[]) {
 
 	{
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		VertexArray va;
 		VertexBuffer vb(positions, sizeof(positions));
 
@@ -36,6 +41,8 @@ int main (int argc, char* argv[]) {
 		va.addBuffer(vb, layout);
 
 		IndexBuffer ib(indices, 6);
+
+		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
 		Shader shader("res/shaders/triangle.glsl");
 		shader.bind();
