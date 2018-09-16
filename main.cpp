@@ -17,19 +17,17 @@ int main (int argc, char* argv[]) {
 
 	{
 
-
 		float positions[] = {
-				0.0f, 0.0f, 0.0f, 0.0f,
-				100.0f, 0.0f, 1.0f, 0.0f,
+				-100.0f, -100.0f, 0.0f, 0.0f,
+				100.0f, -100.0f, 1.0f, 0.0f,
 				100.0f, 100.0f, 1.0f, 1.0f,
-				0.0f, 100.0f, 0.0f, 1.0f
+				-100.0f, 100.0f, 0.0f, 1.0f
 		};
 
 		unsigned int indices[] = {
 				0, 1, 2,
 				2, 3, 0,
 		};
-
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -45,14 +43,14 @@ int main (int argc, char* argv[]) {
 		IndexBuffer ib(indices, 6);
 
 		glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 0));
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+		glm::mat4 view = glm::translate(glm::mat4(1), glm::vec3(640, 360, 0));
+		/*glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
 
-		glm::mat4 mvp = proj * view * model;
+		glm::mat4 mvp = proj * view * model;*/
 
 		Shader shader("res/shaders/triangle.glsl");
-		shader.bind();
-		shader.setUniformMat4f("u_MVP", mvp);
+		/*shader.bind();
+		shader.setUniformMat4f("u_MVP", mvp);*/
 
 		Texture texture("res/textures/prova.png");
 		texture.bind(0);
@@ -65,21 +63,35 @@ int main (int argc, char* argv[]) {
 
 		Renderer renderer;
 
-		/*float r = 0.0f;
-		float increment = 0.05f;*/
-
+		float r = 0.0f;
+		float increment = 0.05f;
 
 		while (!glfwWindowShouldClose(window)) {
 
 			processInput(window);
+
 			renderer.clear();
 
-			shader.bind();
-			renderer.draw(va, ib, shader);
+			//shader.bind();
 
-			/*if (r > 1 or r < 0)
+			{
+				glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(r*200, 0, 0));
+				glm::mat4 mvp = proj * view * model;
+				shader.setUniformMat4f("u_MVP", mvp);
+				renderer.draw(va, ib, shader);
+			}
+
+			{
+				glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, r*300, 0));
+				glm::mat4 mvp = proj * view * model;
+				shader.setUniformMat4f("u_MVP", mvp);
+				renderer.draw(va, ib, shader);
+			}
+
+
+			if (r > 1 or r < 0)
 				increment = -increment;
-			r += increment;*/
+			r += increment;
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
