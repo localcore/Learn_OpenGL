@@ -19,10 +19,10 @@ int main (int argc, char* argv[]) {
 
 
 		float positions[] = {
-				-0.5f, -0.5f, 0.0f, 0.0f,
-				0.5f, -0.5f, 1.0f, 0.0f,
-				0.5f, 0.5f, 1.0f, 1.0f,
-				-0.5f, 0.5f, 0.0f, 1.0f
+				0.0f, 0.0f, 0.0f, 0.0f,
+				100.0f, 0.0f, 1.0f, 0.0f,
+				100.0f, 100.0f, 1.0f, 1.0f,
+				0.0f, 100.0f, 0.0f, 1.0f
 		};
 
 		unsigned int indices[] = {
@@ -44,11 +44,15 @@ int main (int argc, char* argv[]) {
 
 		IndexBuffer ib(indices, 6);
 
-		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+		glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 0));
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+
+		glm::mat4 mvp = proj * view * model;
 
 		Shader shader("res/shaders/triangle.glsl");
 		shader.bind();
-		shader.setUniformMat4f("u_MVP", proj);
+		shader.setUniformMat4f("u_MVP", mvp);
 
 		Texture texture("res/textures/prova.png");
 		texture.bind(0);
@@ -98,8 +102,7 @@ GLFWwindow* createWindow () {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(1280, 960, "Learn OpenGL", nullptr, nullptr);
-
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "Learn OpenGL", nullptr, nullptr);
 	if (!window) {
 		glfwTerminate();
 		return nullptr;
