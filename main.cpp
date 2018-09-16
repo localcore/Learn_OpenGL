@@ -15,19 +15,21 @@ int main (int argc, char* argv[]) {
 
 	GLFWwindow* window = createWindow();
 
-	float positions[] = {
-			-0.5f, -0.5f, 0.0f, 0.0f,
-			0.5f, -0.5f, 1.0f, 0.0f,
-			0.5f, 0.5f, 1.0f, 1.0f,
-			-0.5f, 0.5f, 0.0f, 1.0f
-	};
-
-	unsigned int indices[] = {
-			0, 1, 2,
-			2, 3, 0,
-	};
-
 	{
+
+
+		float positions[] = {
+				-0.5f, -0.5f, 0.0f, 0.0f,
+				0.5f, -0.5f, 1.0f, 0.0f,
+				0.5f, 0.5f, 1.0f, 1.0f,
+				-0.5f, 0.5f, 0.0f, 1.0f
+		};
+
+		unsigned int indices[] = {
+				0, 1, 2,
+				2, 3, 0,
+		};
+
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -46,6 +48,7 @@ int main (int argc, char* argv[]) {
 
 		Shader shader("res/shaders/triangle.glsl");
 		shader.bind();
+		shader.setUniformMat4f("u_MVP", proj);
 
 		Texture texture("res/textures/prova.png");
 		texture.bind(0);
@@ -58,8 +61,9 @@ int main (int argc, char* argv[]) {
 
 		Renderer renderer;
 
-		float r = 0.0f;
-		float increment = 0.05f;
+		/*float r = 0.0f;
+		float increment = 0.05f;*/
+
 
 		while (!glfwWindowShouldClose(window)) {
 
@@ -67,15 +71,15 @@ int main (int argc, char* argv[]) {
 			renderer.clear();
 
 			shader.bind();
-			//shader.setUniform4f("u_Color", r, 0.0f, 0.0f, 1.0f);
 			renderer.draw(va, ib, shader);
 
-			if (r > 1 or r < 0)
+			/*if (r > 1 or r < 0)
 				increment = -increment;
-			r += increment;
+			r += increment;*/
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+
 		}
 
 	}
@@ -94,7 +98,7 @@ GLFWwindow* createWindow () {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Learn OpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(1280, 960, "Learn OpenGL", nullptr, nullptr);
 
 	if (!window) {
 		glfwTerminate();

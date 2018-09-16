@@ -10,13 +10,15 @@ add_subdirectory(GLFW)
 link_libraries(glfw)
 include_directories(GLFW/deps)
 
+add_subdirectory(vendor/glm)
+
 add_executable(Learn_OpenGL main.cpp
         VertexBuffer.cpp VertexBufferLayout.h
         IndexBuffer.cpp VertexArray.cpp Shader.cpp Texture.cpp
         Renderer.cpp
-        vendor/stb_image/stb.h
-        vendor/glm/glm.hpp
-        vendor/glm/gtc/matrix_transform.hpp
+        #vendor/stb_image/stb.h
+        #vendor/glm/glm.hpp
+        #vendor/glm/gtc/matrix_transform.hpp
 
         GLFW/deps/glad/glad.h
         GLFW/deps/glad.c)
