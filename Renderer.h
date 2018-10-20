@@ -1,9 +1,9 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "vendor/glm/glm.hpp"
+#include "vendor/glm/gtc/matrix_transform.hpp"
 
 class Renderer {
 public:

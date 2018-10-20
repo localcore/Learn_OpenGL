@@ -1,4 +1,6 @@
 #include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include "Renderer.h"
 
 void Renderer::clear () const {

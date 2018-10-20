@@ -2,8 +2,6 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Renderer.h"
-#include "vendor/glm/glm.hpp"
-#include "vendor/glm/gtc/matrix_transform.hpp"
 
 GLFWwindow* createWindow ();
 
@@ -16,6 +14,7 @@ int main (int argc, char* argv[]) {
 	GLFWwindow* window = createWindow();
 
 	{
+
 
 		float positions[] = {
 				-100.0f, -100.0f, 0.0f, 0.0f,
@@ -44,13 +43,8 @@ int main (int argc, char* argv[]) {
 
 		glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);
 		glm::mat4 view = glm::translate(glm::mat4(1), glm::vec3(640, 360, 0));
-		/*glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
-
-		glm::mat4 mvp = proj * view * model;*/
 
 		Shader shader("res/shaders/triangle.glsl");
-		/*shader.bind();
-		shader.setUniformMat4f("u_MVP", mvp);*/
 
 		Texture texture("res/textures/prova.png");
 		texture.bind(0);
@@ -67,35 +61,30 @@ int main (int argc, char* argv[]) {
 		float increment = 0.05f;
 
 		while (!glfwWindowShouldClose(window)) {
-
 			processInput(window);
 
 			renderer.clear();
-
-			//shader.bind();
-
-			{
-				glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(r*200, 0, 0));
-				glm::mat4 mvp = proj * view * model;
-				shader.setUniformMat4f("u_MVP", mvp);
-				renderer.draw(va, ib, shader);
-			}
-
-			{
-				glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, r*300, 0));
-				glm::mat4 mvp = proj * view * model;
-				shader.setUniformMat4f("u_MVP", mvp);
-				renderer.draw(va, ib, shader);
-			}
-
 
 			if (r > 1 or r < 0)
 				increment = -increment;
 			r += increment;
 
+			{
+				glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(r * 200, 0, 0));
+				glm::mat4 mvp = proj * view * model;
+				shader.setUniformMat4f("u_MVP", mvp);
+				renderer.draw(va, ib, shader);
+			}
+
+			{
+				glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, r * 300, 0));
+				glm::mat4 mvp = proj * view * model;
+				shader.setUniformMat4f("u_MVP", mvp);
+				renderer.draw(va, ib, shader);
+			}
+
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-
 		}
 
 	}

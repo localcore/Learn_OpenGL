@@ -13,6 +13,7 @@ include_directories(GLFW/deps)
 add_subdirectory(vendor/glm)
 
 add_executable(Learn_OpenGL main.cpp
+
         VertexBuffer.cpp VertexBufferLayout.h
         IndexBuffer.cpp Shader.cpp Texture.cpp
         VertexArray.cpp Renderer.cpp
